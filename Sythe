@@ -183,3 +183,52 @@ local Button = AimAssistTab:CreateButton({
       end)
    end
 })
+
+local Button = MainTab:CreateButton({
+   Name = "Name ESP",
+   Callback = function()
+   -- The function that takes place when the button is pressed
+        -- Variables
+local Players = game:GetService("Players")
+
+-- Function to create a nametag for a player
+local function createNametag(player)
+    -- Wait for the player's character to be added to the game
+    player.CharacterAdded:Connect(function(character)
+        -- Wait for the character's HumanoidRootPart to be added
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+        -- Create a BillboardGui
+        local billboardGui = Instance.new("BillboardGui")
+        billboardGui.Adornee = humanoidRootPart
+        billboardGui.Size = UDim2.new(0, 200, 0, 50)
+        billboardGui.StudsOffset = Vector3.new(0, 3, 0)
+        billboardGui.AlwaysOnTop = true
+
+        -- Create a TextLabel for the name
+        local nameLabel = Instance.new("TextLabel")
+        nameLabel.Size = UDim2.new(1, 0, 1, 0)
+        nameLabel.BackgroundTransparency = 1
+        nameLabel.Text = player.Name
+        nameLabel.TextColor3 = Color3.new(1, 1, 1)
+        nameLabel.TextStrokeTransparency = 0
+        nameLabel.TextScaled = true
+        nameLabel.Parent = billboardGui
+
+        -- Parent the BillboardGui to the character
+        billboardGui.Parent = character
+    end)
+end
+
+-- Apply nametag creation to all existing players
+for _, player in ipairs(Players:GetPlayers()) do
+    createNametag(player)
+end
+
+-- Apply nametag creation to new players
+Players.PlayerAdded:Connect(function(player)
+    createNametag(player)
+end)
+
+   end,
+})
